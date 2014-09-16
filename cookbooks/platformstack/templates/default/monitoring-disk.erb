@@ -1,0 +1,20 @@
+# CHEF MANAGED FILE: DO NOT EDIT
+# Controlling Cookbook: <%= @cookbook_name %>
+#
+
+type: agent.disk
+label: Disk check on <%= node['platformstack']['cloud_monitoring']['disk']['target'] %>
+disabled: <%= node['platformstack']['cloud_monitoring']['disk']['disabled'] %>
+period: <%= node['platformstack']['cloud_monitoring']['disk']['period'] %>
+timeout: <%= node['platformstack']['cloud_monitoring']['disk']['timeout'] %>
+details:
+  target: <%= node['platformstack']['cloud_monitoring']['disk']['target'] %>
+<% if node['platformstack']['cloud_monitoring']['disk']['alarm'] == true %>
+alarms:
+    alarm-disk:
+        label: usage on <%= node['platformstack']['cloud_monitoring']['disk']['target'] %>
+        notification_plan_id: <%= node['platformstack']['cloud_monitoring']['notification_plan_id'] %>
+        criteria: |
+            <%= node['platformstack']['cloud_monitoring']['disk']['alarm_criteria'] %>
+<% end %>
+

@@ -1,6 +1,6 @@
 heat_template_version: 2013-05-23
 
-description: |
+description: >
   Heat template to deploy a multi app server running PHP app under apache.
 
   parameter_groups:
@@ -13,46 +13,42 @@ description: |
 
   - label: PHP Application Settings
     parameters:
-    - image
-    - revision
-    - packages
-    - repo
-    - deploy_key
-    - destination
-    - public
-
-  - label: rax-dev-params
-    parameters:
+    - site1
     - server_hostname
     - http_port
     - https_port
-    - memcached_size
+    - revision
+    - repo
+    - deploy_key
+    - destination
+
+  - label: rax-dev-params
+    parameters:
     - kitchen
     - chef_version
 
   paramters:
 
-    server_hostname:
-      label: Server Name
-      description: Server Name
-      type: string
-      default: php
-      contraints:
-      - length:
-          min: 1
-          max: 64
-      - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
-        description: |
-          Must begin with a letter and contain only alphanumeric characters.
-
     image:
-      label: Operating System
-      description: |
+      label: Operation System
+      description: >
+        Required: Server image used for all servers that are created as part of
+        this deployment.
+      type: string
+      default: Ubuntu 12.04 LTS (Precise Pangolin)
+      constraints:
+        - allowed_values:
+          - Ubuntu 12.04 LTS (Precise pangolin)
+          description: Must be a supported operation system.
+
+    flavor:
+      label: Server size
+      description: >
         Required: Server image used for all servers that are created as part
         of this deployment.
       type: string
-      default: Ubuntu 12.04 LTS (Precise Pangolin)
-      contraints:
+      default: 4 GB Performance
+      constraints:
       - allowed_values:
           - 1 GB Performance
           - 2 GB Performance
@@ -67,60 +63,16 @@ description: |
           - 8GB Standard Performance
           - 15GB Standard Performance
           - 30GB Standard Performance
-        description: |
+        description: >
           Must be a valid Rackspace Cloud Server flavor for the region you have
           selected to deploy.
 
-    revision:
-      label: Revision
-      description: |
-        Optional: Git branch/ref to deploy. Default: HEAD
+    site1:
+      label: Site name
+      description: >
+        bla bla bla
       type: string
-      default: ''
-
-    packages:
-      label: System Packages
-      description: |
-        Optional: Additional system packages to install. For a list of available
-        packages, see: http://packages.ubuntu.com/precise/allpackages.
-      type: string
-      default: ''
-
-    repo:
-      label: Git Repository
-      description: |
-        Optional: URL to your git repository. Use the https syntax for public
-        repositories, use git@ syntax for private repositories.
-      type: string
-      default: ''
-
-    url:
-      label: Site Domain
-      description: URL for site
-      type: string
-      default: 'http://example.com'
-
-    deploy_key:
-      label: Git deploy key
-      description: |
-        Optional: If you specified a private repository, provide your private
-        deploy key here.
-      type: string
-      default: ''
-
-    destination:
-      label: Site path
-      description: Path to setup your application on your servers.
-      default: /var/www/vhosts/application
-      type: string
-
-    public:
-      label: Public Directory
-      description: |
-        The public facing directory of your application relative to the
-        destination.
-      type: string
-      default: /
+      default: 'example.com'
 
     http_port:
       label: HTTP port
@@ -134,6 +86,29 @@ description: |
       type: string
       default: 443
 
+    revision:
+      label: Revision
+      description: >
+        Optional: Git branch/ref to deploy. Default: HEAD
+      type: string
+      default: ''
+
+    repo:
+      label: Git Repository
+      description: >
+        Optional: URL to your git repository. Use the https syntax for public
+        repositories, use git@ syntax for private repositories.
+      type: string
+      default: ''
+
+    deploy_key:
+      label: Git deploy key
+      description: |
+        Optional: If you specified a private repository, provide your private
+        deploy key here.
+      type: string
+      default: ''
+
     memcached_size:
       label: Memcached Memory Limit
       description: Memcached memory size limit
@@ -142,7 +117,6 @@ description: |
 
     kitchen:
       label: Kitchen
-      description: URL for the kitchen to use
       type: string
       default: https://github.com/AutomationSupport/phpstack
 
@@ -151,6 +125,19 @@ description: |
       description: Version of chef-client to use
       type: string
       default: 11.12.8
+
+    server_hostname:
+      label: Server Name
+      description: Server Name
+      type: string
+      default: phpstack
+      constraints:
+      - length:
+          min: 1
+          max: 64
+      - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+        description: >
+          Must begin with a letter and contain only alphanumeric characters.
 
   resources:
 
@@ -200,16 +187,16 @@ description: |
             repo: { get_param: repo }
             rev: { get_param: revision }
             url: { get_param: url }
-          memcached:
-            listen: 127.0.0.1
-          varnish:
-            backend_host: 127.0.0.1
-          run_list: ["recipe[apt]",
-                     "recipe[build-essential]",
-                     "recipe[memcached]",
-                     "recipe[rax_php_app]",
-                     "recipe[php-ioncube]",
-                     "recipe[mysql::server]"
+          run_list: ["recipe::mysql_base",
+                     "recipe[phpstack::mysql_base]",
+                     "recipe[phpstack::postgresql_base]",
+                     "recipe[phpstack::mongodb_standalone]",
+                     "recipe[phpstack::memcache]",
+                     "recipe[phpstack::varnish]",
+                     "recipe[phpstack::rabbitmq]",
+                     "recipe[phpstack::redis_single]",
+                     "recipe[phpstack::application_php]",
+          ]
 
   outputs:
     private_keys:

@@ -1,0 +1,23 @@
+# CHEF MANAGED FILE: DO NOT EDIT
+# Controlling Cookbook: <%= @cookbook_name %>
+#
+
+type: agent.cpu
+label: CPU
+disabled: <%= node['platformstack']['cloud_monitoring']['cpu']['disabled'] %>
+period: <%= node['platformstack']['cloud_monitoring']['cpu']['period'] %>
+timeout: <%= node['platformstack']['cloud_monitoring']['cpu']['timeout'] %>
+<% if node['platformstack']['cloud_monitoring']['cpu']['alarm'] == true %>
+alarms:
+    alarm-cpu:
+        label: CPU Usage
+        notification_plan_id: <%= node['platformstack']['cloud_monitoring']['notification_plan_id'] %>
+        criteria: |
+            if (metric['usage_average'] > <%= node['platformstack']['cloud_monitoring']['cpu']['crit'] %> ) {
+              return new AlarmStatus(CRITICAL, 'CPU usage is #{usage_average}%, above your critical threshold of <%= node['platformstack']['cloud_monitoring']['cpu']['crit'] %>%');
+            }
+            if (metric['usage_average'] > <%= node['platformstack']['cloud_monitoring']['cpu']['warn'] %> ) {
+              return new AlarmStatus(WARNING, 'CPU usage is #{usage_average}%, above your warning threshold of <%= node['platformstack']['cloud_monitoring']['cpu']['warn'] %>%');
+            }
+            return new AlarmStatus(OK, 'CPU usage is #{usage_average}%, below your warning threshold of <%= node['platformstack']['cloud_monitoring']['cpu']['warn'] %>%');
+<% end %>
