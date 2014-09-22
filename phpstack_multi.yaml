@@ -1,212 +1,216 @@
 heat_template_version: 2013-05-23
 
-description: >
+description: |
   Heat template to deploy a multi app server running PHP app under apache.
 
-  parameter_groups:
+parameter_groups:
 
 
-  - label: Server Settings
-    parameters:
-    - image
-    - flavor
+- label: Server Settings
+  parameters:
+  - image
+  - flavor
 
-  - label: PHP Application Settings
-    parameters:
-    - site1
-    - server_hostname
-    - http_port
-    - https_port
-    - revision
-    - repo
-    - deploy_key
-    - destination
+- label: PHP Application Settings
+  parameters:
+  - site1
+  - server_hostname
+  - http_port
+  - https_port
+  - revision
+  - repo
+  - deploy_key
+  - demo
 
-  - label: rax-dev-params
-    parameters:
-    - kitchen
-    - chef_version
+- label: rax-dev-params
+  parameters:
+  - kitchen
+  - chef_version
 
-  paramters:
+parameters:
 
-    image:
-      label: Operation System
-      description: >
-        Required: Server image used for all servers that are created as part of
-        this deployment.
-      type: string
-      default: Ubuntu 12.04 LTS (Precise Pangolin)
-      constraints:
-        - allowed_values:
-          - Ubuntu 12.04 LTS (Precise pangolin)
-          description: Must be a supported operation system.
-
-    flavor:
-      label: Server size
-      description: >
-        Required: Server image used for all servers that are created as part
-        of this deployment.
-      type: string
-      default: 4 GB Performance
-      constraints:
+  image:
+    label: Operation System
+    description: |
+      Required: Server image used for all servers that are created as part of
+      this deployment.
+    type: string
+    default: Ubuntu 12.04 LTS (Precise Pangolin)
+    constraints:
       - allowed_values:
-          - 1 GB Performance
-          - 2 GB Performance
-          - 4 GB Performance
-          - 8 GB Performance
-          - 15 GB Performance
-          - 30 GB Performance
-          - 512MB Standard Performance
-          - 1GB Standard Performance
-          - 2GB Standard Performance
-          - 4GB Standard Performance
-          - 8GB Standard Performance
-          - 15GB Standard Performance
-          - 30GB Standard Performance
-        description: >
-          Must be a valid Rackspace Cloud Server flavor for the region you have
-          selected to deploy.
+        - Ubuntu 12.04 LTS (Precise Pangolin)
+        description: Must be a supported operation system.
 
-    site1:
-      label: Site name
-      description: >
-        bla bla bla
-      type: string
-      default: 'example.com'
-
-    http_port:
-      label: HTTP port
-      description: HTTP port
-      type: string
-      default: 80
-
-    https_port:
-      label: HTTPS port
-      description: HTTPS port
-      type: string
-      default: 443
-
-    revision:
-      label: Revision
-      description: >
-        Optional: Git branch/ref to deploy. Default: HEAD
-      type: string
-      default: ''
-
-    repo:
-      label: Git Repository
-      description: >
-        Optional: URL to your git repository. Use the https syntax for public
-        repositories, use git@ syntax for private repositories.
-      type: string
-      default: ''
-
-    deploy_key:
-      label: Git deploy key
+  flavor:
+    label: Server size
+    description: |
+      Required: Server image used for all servers that are created as part
+      of this deployment.
+    type: string
+    default: 4 GB Performance
+    constraints:
+    - allowed_values:
+        - 1 GB Performance
+        - 2 GB Performance
+        - 4 GB Performance
+        - 8 GB Performance
+        - 15 GB Performance
+        - 30 GB Performance
+        - 512MB Standard Performance
+        - 1GB Standard Performance
+        - 2GB Standard Performance
+        - 4GB Standard Performance
+        - 8GB Standard Performance
+        - 15GB Standard Performance
+        - 30GB Standard Performance
       description: |
-        Optional: If you specified a private repository, provide your private
-        deploy key here.
-      type: string
-      default: ''
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy.
 
-    memcached_size:
-      label: Memcached Memory Limit
-      description: Memcached memory size limit
-      type: number
-      default: 128
+  site1:
+    label: Site name
+    description: |
+      bla bla bla
+    type: string
+    default: 'example.com'
 
-    kitchen:
-      label: Kitchen
-      type: string
-      default: https://github.com/AutomationSupport/phpstack
+  http_port:
+    label: HTTP port
+    description: HTTP port
+    type: string
+    default: 80
 
-    chef_version:
-      label: Chef Version
-      description: Version of chef-client to use
-      type: string
-      default: 11.12.8
+  https_port:
+    label: HTTPS port
+    description: HTTPS port
+    type: string
+    default: 443
 
-    server_hostname:
-      label: Server Name
-      description: Server Name
-      type: string
-      default: phpstack
-      constraints:
-      - length:
-          min: 1
-          max: 64
-      - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
-        description: >
-          Must begin with a letter and contain only alphanumeric characters.
+  revision:
+    label: Revision
+    description: |
+      Optional: Git branch/ref to deploy. Default: HEAD
+    type: string
+    default: 'v0.0.9'
 
-  resources:
+  repo:
+    label: Git Repository
+    description: |
+      Optional: URL to your git repository. Use the https syntax for public
+      repositories, use git@ syntax for private repositories.
+    type: string
+    default: 'https://github.com/rackops/php-test-app'
 
-    ssh_key:
-      type: "OS::Nova::KeyPair"
-      properties:
-        name: { get_param: "OS::stack_id" }
-        save_private_key: true
+  deploy_key:
+    label: Git deploy key
+    description: |
+      Optional: If you specified a private repository, provide your private
+      deploy key here.
+    type: string
+    default: ''
 
-    mysql_root_password:
-      type: "OS::Heat::RandomString"
-      properties:
-        length: 32
-        sequence: lettersdigits
+  memcached_size:
+    label: Memcached Memory Limit
+    description: Memcached memory size limit
+    type: number
+    default: 128
 
-    php_server:
-      type: "Rackspace::Cloud::Server"
-      properties:
-        name: { get_param: server_hostname }
-        flavor: { get_param: flavor }
-        image: { get_param: image }
-        key_name: { get_resource: ssh_key }
-        metadata:
-          rax-heat: { get_param: "OS::stack_id" }
+  kitchen:
+    label: Kitchen
+    type: string
+    default: https://github.com/rackspace-cookbooks/phpstack
 
-    php_setup:
-      type: "OS::Heat::ChefSolo"
-      depends_on: php_server
-      properties:
-        username: root
-        private_key: { get_attr: [ssh_key, private_key] }
-        host: { get_attr: [php_server, accessIPv4] }
-        kitchen: { get_param: kitchen }
-        chef_version: { get_param: chef_version }
-        node:
-          mysql:
-            server_root_password: { get_attr: [mysql_root_password, value] }
-            server_debian_password: { get_attr: [mysql_debian_password, value] }
-            bind_address: 127.0.0.1
-          php_app:
-            destination: { get_param: destination }
-            deploy_key: { get_param: deploy_key }
-            http_port: { get_param: http_port }
-            https_port: { get_param: https_port }
-            packages: { get_param: packages }
-            public: { get_param: public }
-            repo: { get_param: repo }
-            rev: { get_param: revision }
-            url: { get_param: url }
-          run_list: ["recipe::mysql_base",
-                     "recipe[phpstack::mysql_base]",
-                     "recipe[phpstack::postgresql_base]",
-                     "recipe[phpstack::mongodb_standalone]",
-                     "recipe[phpstack::memcache]",
-                     "recipe[phpstack::varnish]",
-                     "recipe[phpstack::rabbitmq]",
-                     "recipe[phpstack::redis_single]",
-                     "recipe[phpstack::application_php]",
-          ]
+  chef_version:
+    label: Chef Version
+    description: Version of chef-client to use
+    type: string
+    default: 11.12.8
 
-  outputs:
-    private_keys:
-      description: SSH Private Key
-      value: { get_attr: [ssh_key, private_key] }
+  server_hostname:
+    label: Server Name
+    description: Server Name
+    type: string
+    default: phpstack
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
 
-    server_ip:
-      description: Server IP
-      value: { get_attr: [php_server, accessIPv4] }
+  demo:
+    label: Demo
+    description: Enable this to use demo app.
+    type: boolean
+    default: true
 
-    mysql_root_password:
-      description: MySQL Root Password
-      value: { get_attr: [mysql_root_password, value] }
+resources:
+
+  ssh_key:
+    type: "OS::Nova::KeyPair"
+    properties:
+      name: { get_param: "OS::stack_id" }
+      save_private_key: true
+
+  mysql_root_password:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 32
+      sequence: lettersdigits
+
+  php_server:
+    type: "Rackspace::Cloud::Server"
+    properties:
+      name: { get_param: server_hostname }
+      flavor: { get_param: flavor }
+      image: { get_param: image }
+      key_name: { get_resource: ssh_key }
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
+
+  phpstack:
+    type: "OS::Heat::ChefSolo"
+    depends_on: php_server
+    properties:
+      username: root
+      private_key: { get_attr: [ssh_key, private_key] }
+      host: { get_attr: [php_server, accessIPv4] }
+      kitchen: { get_param: kitchen }
+      chef_version: { get_param: chef_version }
+      node:
+        mysql:
+          server_root_password: { get_attr: [mysql_root_password, value] }
+          bind_address: 127.0.0.1
+        phpstack:
+          demo: { get_param: demo }
+          #site1: { get_param: site1 }
+          #server_hostname: { get_param: server_hostname }
+          #http_port: { get_param: http_port }
+          #https_port: { get_param: https_port }
+          #revision: { get_param: revision }
+          #repo: { get_param: repo }
+          #deploy_key: { get_param: deploy_key }
+        run_list: [
+                   "recipe[phpstack::mysql_base]",
+                   "recipe[phpstack::postgresql_base]",
+                   "recipe[phpstack::mongodb_standalone]",
+                   "recipe[phpstack::memcache]",
+                   "recipe[phpstack::varnish]",
+                   "recipe[phpstack::rabbitmq]",
+                   "recipe[phpstack::redis_single]",
+                   "recipe[phpstack::application_php]",
+        ]
+
+outputs:
+  private_keys:
+    description: SSH Private Key
+    value: { get_attr: [ssh_key, private_key] }
+
+  server_ip:
+    description: Server IP
+    value: { get_attr: [php_server, accessIPv4] }
+
+  mysql_root_password:
+    description: MySQL Root Password
+    value: { get_attr: [mysql_root_password, value] }
