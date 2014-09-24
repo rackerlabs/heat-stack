@@ -21,6 +21,7 @@ parameter_groups:
   - repo
   - deploy_key
   - demo
+  - webserver
 
 - label: rax-dev-params
   parameters:
@@ -118,7 +119,7 @@ parameters:
   kitchen:
     label: Kitchen
     type: string
-    default: https://github.com/rackspace-cookbooks/phpstack
+    default: https://github.com/marcoamorales/phpstack-heat
 
   chef_version:
     label: Chef Version
@@ -145,6 +146,12 @@ parameters:
     type: boolean
     default: true
 
+  webserver:
+    label: Webserver
+    description: Webserver we will be using for the stack
+    type: string
+    default: apache
+
 resources:
 
   ssh_key:
@@ -154,6 +161,12 @@ resources:
       save_private_key: true
 
   mysql_root_password:
+    type: "OS::Heat::RandomString"
+    properties:
+      length: 32
+      sequence: lettersdigits
+
+  postgresql_password:
     type: "OS::Heat::RandomString"
     properties:
       length: 32
@@ -182,8 +195,13 @@ resources:
         mysql:
           server_root_password: { get_attr: [mysql_root_password, value] }
           bind_address: 127.0.0.1
+        postgresql:
+          password:
+            postgres: { get_attr: [postgresql_password, value] }
         phpstack:
-          demo: { get_param: demo }
+          webserver: { get_param: webserver }
+          demo:
+            enabled: { get_param: demo }
           #site1: { get_param: site1 }
           #server_hostname: { get_param: server_hostname }
           #http_port: { get_param: http_port }
