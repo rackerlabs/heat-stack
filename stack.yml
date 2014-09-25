@@ -176,6 +176,7 @@ resources:
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
           validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
 
   tier1_load_balancer:
     type: "Rackspace::Cloud::LoadBalancer"
