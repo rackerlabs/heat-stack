@@ -168,20 +168,49 @@ resources:
       resource_def:
         type: { get_param: child_template }
         properties:
-          name:
-          image:
-          flavor:
-          role:
-          chef_server_url:
-          chef_version:
-          organization:
-          validation_key:
+          name: { get_param: t2_name }
+          image: { get_param: t2_image }
+          flavor: { get_param: t2_flavor }
+          role: { get_param: t2_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+
+  tier1_load_balancer:
+    type: "Rackspace::Cloud::LoadBalancer"
+    depends_on:
+    - tier2_setup
+    properties:
+      name: { get_param: t1_load_balancer }
+      nodes:
+      - addresses: { get_attr: [tier2_setup, private_ip] }
+        port: 80
+        condition: ENABLED
+      healthMonitor:
+        type: CONNECT
+        delay: 10
+        timeout: 5
+        attemptsBeforeDeactivation: 1
+      port: 80
+      protocol: HTTP
+      algorithm: LEAST_CONNECTIONS
+      contentCaching: ENABLED
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
+      metadata:
+        rax-heat: { get_param: "OS::stack_id" }
 
 outputs:
   private_key:
     description: SSH Private Key
     value: { get_attr: [ssh_key, private_key] }
 
-  server_ip:
-    description: Server IP
-    value: { get_attr: [server, accessIPv4] }
+  t1_loadbalancer:
+    description: Tier 1 Load Balancer IP
+    value: { get_attr: [tier1_load_balancer, PublicIp] }
+
+  t2_server_ip:
+    description: Tier 2 Server IP
+    value: { get_attr: [tier2_setup, public_ip] }
