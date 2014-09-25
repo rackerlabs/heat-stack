@@ -172,7 +172,6 @@ resources:
           image: { get_param: t2_image }
           flavor: { get_param: t2_flavor }
           role: { get_param: t2_role }
-          private_key: { get_attr: [ssh_key, private_key ] }
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
