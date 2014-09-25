@@ -6,13 +6,13 @@ description: |
 
 parameter_groups:
 
-- label: Tier 1
+- label: Tier 2
   parameters:
-  - t1_name
-  - t1_image
-  - t1_flavor
-  - t1_count
-  - t1_role
+  - t2_name
+  - t2_image
+  - t2_flavor
+  - t2_count
+  - t2_role
 
 - label: Chef Parameters
   parameters:
@@ -22,11 +22,11 @@ parameter_groups:
   - validation_key
 
 parameters:
-  t1_name:
-    label: Tier 1 Name
-    description: Base name for Teir 1
+  t1_load_balancer:
+    label: Tier 1 Load Balancer
+    description: Load Balancer that points to nodes in Tier 2.
     type: string
-    default: tier1
+    default: Tier1LB
     constraints:
     - length:
         min: 1
@@ -35,8 +35,21 @@ parameters:
       description: |
         Must begin with a letter and contain only alphanumeric characters.
 
-  t1_image:
-    label: Tier 1 Image
+  t2_name:
+    label: Tier 2 Name
+    description: Base name for Teir 1
+    type: string
+    default: tier2
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t2_image:
+    label: Tier 2 Image
     description: |
       Optional: Server image used for the server created
       as a part of this deployment.
@@ -57,8 +70,8 @@ parameters:
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
      description: Must be a supported operating system.
 
-  t1_flavor:
-    label: Tier 1 Flavor
+  t2_flavor:
+    label: Tier 2 Flavor
     description: |
       Optional: Rackspace Cloud Server flavor to use. The size is based on the
       amount of RAM for the provisioned server.
@@ -83,13 +96,18 @@ parameters:
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
 
-  t1_count:
-    label: Tier 1 Nodes
-    description: Number of Tier 1 nodes to create.
+  t2_count:
+    label: Tier 2 Nodes
+    description: Number of Tier 2 nodes to create.
     type: number
     default: 1
+    constraints:
+    - length:
+        min: 1
+        max: 25
+      description: Must be between 1 and 25 servers.
 
-  t1_role:
+  t2_role:
     label: Role
     description: |
       Optional: Chef Role. Will default to "_default"
@@ -135,7 +153,7 @@ resources:
       name: { get_param: "OS::stack_id" }
       save_private_key: true
 
-  t1_servers:
+  t2_servers:
     type: "Rackspace::Cloud::Server"
     properties:
       name: { get_param: server_hostname }
