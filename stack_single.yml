@@ -122,11 +122,6 @@ parameters:
     default:
 
 resources:
-  ssh_key:
-    type: "OS::Nova::KeyPair"
-    properties:
-      name: { get_param: "OS::stack_id" }
-      save_private_key: true
 
   server:
     type: "Rackspace::Cloud::Server"
@@ -212,10 +207,11 @@ resources:
             "%validation_key%": { get_param: validation_key }
 
 outputs:
-  private_key:
-    description: SSH Private Key
-    value: { get_attr: [ssh_key, private_key] }
 
-  server_ip:
+  public_ip:
     description: Server IP
     value: { get_attr: [server, accessIPv4] }
+
+  private_ip:
+    description: Server IP
+    value: { get_attr: [server, privateIPv4] }
