@@ -14,26 +14,27 @@ outputs:
     value: { get_attr: [server, accessIPv4] }
 
 parameter_groups:
-- label: Server Parameters
+
+- label: Tier 1
   parameters:
-  - server_hostname
-  - image
-  - flavor
+  - t1_name
+  - t1_image
+  - t1_flavor
+  - t1_role
 
 - label: Chef Parameters
   parameters:
   - chef_server_url
   - chef_version
   - organization
-  - role
   - validation_key
 
 parameters:
-  server_hostname:
-    label: Server Name
-    description: Server Name
+  t1_name:
+    label: Tier 1 Name
+    description: Base name for Teir 1
     type: string
-    default: phpstack
+    default: tier1
     constraints:
     - length:
         min: 1
@@ -42,8 +43,8 @@ parameters:
       description: |
         Must begin with a letter and contain only alphanumeric characters.
 
-  image:
-    label: Operating System
+  t1_image:
+    label: Tier 1 Image
     description: |
       Optional: Server image used for the server created
       as a part of this deployment.
@@ -64,8 +65,8 @@ parameters:
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
      description: Must be a supported operating system.
 
-  flavor:
-    label: Server Size
+  t1_flavor:
+    label: Tier 1 Flavor
     description: |
       Optional: Rackspace Cloud Server flavor to use. The size is based on the
       amount of RAM for the provisioned server.
@@ -90,6 +91,13 @@ parameters:
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
 
+  t1_role:
+    label: Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
   chef_server_url:
     label: Chef Server URL
     description: |
@@ -111,13 +119,6 @@ parameters:
       Required: Chef organization
     type: string
     default:
-
-  role:
-    label: Role
-    description: |
-      Optional: Chef Role. Will default to "_default"
-    type: string
-    default: _default
 
   validation_key:
     label: Validation Key
