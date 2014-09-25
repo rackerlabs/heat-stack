@@ -6,6 +6,10 @@ description: |
 
 parameter_groups:
 
+- label: Tier 1
+  parameters:
+  - t1_load_balancer
+
 - label: Tier 2
   parameters:
   - t2_name
@@ -146,6 +150,10 @@ parameters:
     type: string
     default:
 
+  child_template:
+    type: string
+    default: https://raw.github.com/AutomationSupport/heat-stack/master/stack_single.yml
+
 resources:
   ssh_key:
     type: "OS::Nova::KeyPair"
@@ -153,88 +161,21 @@ resources:
       name: { get_param: "OS::stack_id" }
       save_private_key: true
 
-  t2_servers:
-    type: "Rackspace::Cloud::Server"
+  tier2_setup:
+    type: "OS::HEAT::ResourceGroup"
     properties:
-      name: { get_param: server_hostname }
-      flavor: { get_param: flavor }
-      image: { get_param: image }
-      key_name: { get_resource: ssh_key }
-      metadata:
-        rax-heat: { get_param: "OS::stack_id" }
-      user_data:
-        str_replace:
-          template: |
-            #!/bin/bash
-
-            LOGFILE="/var/log/cloud-init-chef-bootstrap.setup.$$"
-
-            # Initial timestamp and debug information
-            date > $LOGFILE
-            echo "Starting cloud-init bootstrap" >> $LOGFILE
-            echo "chef_version parameter: %chef_version%" >> $LOGFILE
-            echo "organization parameter: %organization%" >> $LOGFILE
-            echo "role parameter: %role%" >> $LOGFILE
-
-            # Infer the Chef Server's URL if none was passed
-            CHEFSERVERURL='%chef_server_url%'
-            if [ -n $CHEFSERVERURL ]; then
-              echo "chef_server_url parameter: not passed" >> $LOGFILE
-              CHEFSERVERURL="https://api.opscode.com/organizations/%organization%"
-            else
-              echo "chef_server_url parameter: $CHEFSERVERURL" >> $LOGFILE
-              CHEFSERVERURL="%chef_server_url%"
-            fi
-
-            # Store the validation key in /etc/chef/validator.pem
-            echo "Storing validation key in /etc/chef/validator.pem"
-            mkdir /etc/chef /var/log/chef &>/dev/null
-            cat >/etc/chef/validator.pem <<EOF
-            %validation_key%
-            EOF
-
-            # Cook a minimal client.rb for getting the chef-client registered
-            echo "Creating a minimal /etc/chef/client.rb" >> $LOGFILE
-            touch /etc/chef/client.rb
-            cat >/etc/chef/client.rb <<EOF
-              log_level        :info
-              log_location     STDOUT
-              chef_server_url  "$CHEFSERVERURL"
-              validation_key         "/etc/chef/validator.pem"
-              validation_client_name "%organization%-validator"
-            EOF
-
-            # Cook the first boot file
-            echo "Creating a minimal /etc/chef/first-boot.json" >> $LOGFILE
-            touch /etc/chef/first-boot.json
-            cat >/etc/chef/first-boot.json <<EOF
-            {"run_list":[%role%]}
-            EOF
-
-            # Install chef-client through omnibus (if not already available)
-            if [ ! -f /usr/bin/chef-client ]; then
-              echo "Installing chef using omnibus installer" >> $LOGFILE
-              # adjust to install the latest vs. a particular version
-              curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v %chef_version% &>$LOGFILE
-              echo "Installation of chef complete" >> $LOGFILE
-            fi
-
-            # Kick off the first chef run
-            echo "Executing the first chef-client run"
-            if [ -f /usr/bin/chef-client ]; then
-              echo "First Chef client run" >> $LOGFILE
-              /usr/bin/chef-client
-            fi
-
-            # Script complete. Log final timestamp
-            date >> $LOGFILE
-
-          params:
-            "%chef_server_url%": { get_param: chef_server_url}
-            "%chef_version%": { get_param: chef_version}
-            "%organization%": { get_param: organization}
-            "%role%": { get_param: role}
-            "%validation_key%": { get_param: validation_key }
+      count: { get_param: t2_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+          image:
+          flavor:
+          role:
+          chef_server_url:
+          chef_version:
+          organization:
+          validation_key:
 
 outputs:
   private_key:
