@@ -1,6 +1,6 @@
 heat_template_version: 2013-05-23
 description: |
-  Sample Heat template that creates stack tiers, injects a simple
+  Sample Heat template that creates a server, injects a simple
   BASH script through cloud-init that installs Chef-client and
   joins a Chef Server.
 
@@ -15,13 +15,12 @@ outputs:
 
 parameter_groups:
 
-- label: Tier 1
+- label: Server Parameters
   parameters:
-  - t1_name
-  - t1_image
-  - t1_flavor
-  - t1_count
-  - t1_role
+  - name
+  - image
+  - flavor
+  - role
 
 - label: Chef Parameters
   parameters:
@@ -31,11 +30,11 @@ parameter_groups:
   - validation_key
 
 parameters:
-  t1_name:
-    label: Tier 1 Name
-    description: Base name for Teir 1
+  name:
+    label: Server Name
+    description: Server Hostname
     type: string
-    default: tier1
+    default: server
     constraints:
     - length:
         min: 1
@@ -44,8 +43,8 @@ parameters:
       description: |
         Must begin with a letter and contain only alphanumeric characters.
 
-  t1_image:
-    label: Tier 1 Image
+  image:
+    label: Server Image
     description: |
       Optional: Server image used for the server created
       as a part of this deployment.
@@ -66,8 +65,8 @@ parameters:
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
      description: Must be a supported operating system.
 
-  t1_flavor:
-    label: Tier 1 Flavor
+  flavor:
+    label: Server Flavor
     description: |
       Optional: Rackspace Cloud Server flavor to use. The size is based on the
       amount of RAM for the provisioned server.
@@ -92,14 +91,8 @@ parameters:
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
 
-  t1_count:
-    label: Tier 1 Nodes
-    description: Number of Tier 1 nodes to create.
-    type: number
-    default: 1
-
-  t1_role:
-    label: Role
+  role:
+    label: Chef Role
     description: |
       Optional: Chef Role. Will default to "_default"
     type: string
@@ -144,10 +137,10 @@ resources:
       name: { get_param: "OS::stack_id" }
       save_private_key: true
 
-  t1_servers:
+  server:
     type: "Rackspace::Cloud::Server"
     properties:
-      name: { get_param: server_hostname }
+      name: { get_param: name }
       flavor: { get_param: flavor }
       image: { get_param: image }
       key_name: { get_resource: ssh_key }
