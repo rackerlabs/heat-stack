@@ -1,39 +1,36 @@
 heat_template_version: 2013-05-23
 description: |
-  Sample Heat template that creates 1 Cloud Server, injects a simple
+  Sample Heat template that creates stack tiers, injects a simple
   BASH script through cloud-init that installs Chef-client and
-  joins a Chef Server
-
-outputs:
-  private_key:
-    description: SSH Private Key
-    value: { get_attr: [ssh_key, private_key] }
-
-  server_ip:
-    description: Server IP
-    value: { get_attr: [server, accessIPv4] }
+  joins a Chef Server.
 
 parameter_groups:
-- label: Server Parameters
+
+- label: Tier 1
   parameters:
-  - server_hostname
-  - image
-  - flavor
+  - t1_load_balancer
+
+- label: Tier 2
+  parameters:
+  - t2_name
+  - t2_image
+  - t2_flavor
+  - t2_count
+  - t2_role
 
 - label: Chef Parameters
   parameters:
   - chef_server_url
   - chef_version
   - organization
-  - role
   - validation_key
 
 parameters:
-  server_hostname:
-    label: Server Name
-    description: Server Name
+  t1_load_balancer:
+    label: Tier 1 Load Balancer
+    description: Load Balancer that points to nodes in Tier 2.
     type: string
-    default: phpstack
+    default: Tier1LB
     constraints:
     - length:
         min: 1
@@ -42,8 +39,21 @@ parameters:
       description: |
         Must begin with a letter and contain only alphanumeric characters.
 
-  image:
-    label: Operating System
+  t2_name:
+    label: Tier 2 Name
+    description: Base name for Teir 1
+    type: string
+    default: tier2
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t2_image:
+    label: Tier 2 Image
     description: |
       Optional: Server image used for the server created
       as a part of this deployment.
@@ -51,33 +61,21 @@ parameters:
     default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
     constraints:
     - allowed_values:
-      - CentOS 5.10
       - CentOS 6.5
       - CentOS 6.5 (PVHVM)
       - CentOS 7 (PVHVM)
       - Debian 6.06 (Squeeze)
       - Debian 7 (Wheezy) (PVHVM)
-      - Red Hat Enterprise Linux 5.10
       - Red Hat Enterprise Linux 6.5
       - Red Hat Enterprise Linux 6.5 (PVHVM)
-      - Ubuntu 10.04 LTS (Lucid Lynx)
       - Ubuntu 12.04 LTS (Precise Pangolin)
       - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
       - Ubuntu 14.04 LTS (Trusty Tahr)
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-      - Windows Server 2008 R2 SP1
-      - Windows Server 2008 R2 SP1 + SQL Server 2008 R2 SP2 Standard
-      - Windows Server 2008 R2 SP1 + SQL Server 2008 R2 SP2 Web
-      - Windows Server 2008 R2 SP1 + SQL Server 2012 SP1 Standard
-      - Windows Server 2008 R2 SP1 + SQL Server 2012 SP1 Web
-      - Windows Server 2012
-      - Windows Server 2012 + SQL Server 2012 SP1 Standard
-      - Windows Server 2012 + SQL Server 2012 SP1 Web
-      - Windows Server 2012 R2
-      description: Must be a supported operating system.
+     description: Must be a supported operating system.
 
-  flavor:
-    label: Server Size
+  t2_flavor:
+    label: Tier 2 Flavor
     description: |
       Optional: Rackspace Cloud Server flavor to use. The size is based on the
       amount of RAM for the provisioned server.
@@ -102,6 +100,24 @@ parameters:
         Must be a valid Rackspace Cloud Server flavor for the region you have
         selected to deploy into.
 
+  t2_count:
+    label: Tier 2 Nodes
+    description: Number of Tier 2 nodes to create.
+    type: number
+    default: 1
+    constraints:
+    - length:
+        min: 1
+        max: 25
+      description: Must be between 1 and 25 servers.
+
+  t2_role:
+    label: Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
   chef_server_url:
     label: Chef Server URL
     description: |
@@ -124,13 +140,6 @@ parameters:
     type: string
     default:
 
-  role:
-    label: Role
-    description: |
-      Optional: Chef Role. Will default to "_default"
-    type: string
-    default: _default
-
   validation_key:
     label: Validation Key
     description: |
@@ -141,6 +150,10 @@ parameters:
     type: string
     default:
 
+  child_template:
+    type: string
+    default: https://raw.github.com/AutomationSupport/heat-stack/master/stack_single.yml
+
 resources:
   ssh_key:
     type: "OS::Nova::KeyPair"
@@ -148,85 +161,57 @@ resources:
       name: { get_param: "OS::stack_id" }
       save_private_key: true
 
-  server:
-    type: "Rackspace::Cloud::Server"
+  tier2_setup:
+    type: "OS::HEAT::ResourceGroup"
     properties:
-      name: { get_param: server_hostname }
-      flavor: { get_param: flavor }
-      image: { get_param: image }
-      key_name: { get_resource: ssh_key }
+      count: { get_param: t2_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name: { get_param: t2_name }
+          image: { get_param: t2_image }
+          flavor: { get_param: t2_flavor }
+          role: { get_param: t2_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier1_load_balancer:
+    type: "Rackspace::Cloud::LoadBalancer"
+    depends_on:
+    - tier2_setup
+    properties:
+      name: { get_param: t1_load_balancer }
+      nodes:
+      - addresses: { get_attr: [tier2_setup, private_ip] }
+        port: 80
+        condition: ENABLED
+      healthMonitor:
+        type: CONNECT
+        delay: 10
+        timeout: 5
+        attemptsBeforeDeactivation: 1
+      port: 80
+      protocol: HTTP
+      algorithm: LEAST_CONNECTIONS
+      contentCaching: ENABLED
+      virtualIps:
+      - type: PUBLIC
+        ipVersion: IPV4
       metadata:
         rax-heat: { get_param: "OS::stack_id" }
-      user_data:
-        str_replace:
-          template: |
-            #!/bin/bash
 
-            LOGFILE="/var/log/cloud-init-chef-bootstrap.setup.$$"
+outputs:
+  private_key:
+    description: SSH Private Key
+    value: { get_attr: [ssh_key, private_key] }
 
-            # Initial timestamp and debug information
-            date > $LOGFILE
-            echo "Starting cloud-init bootstrap" >> $LOGFILE
-            echo "chef_version parameter: %chef_version%" >> $LOGFILE
-            echo "organization parameter: %organization%" >> $LOGFILE
-            echo "role parameter: %role%" >> $LOGFILE
+  t1_loadbalancer:
+    description: Tier 1 Load Balancer IP
+    value: { get_attr: [tier1_load_balancer, PublicIp] }
 
-            # Infer the Chef Server's URL if none was passed
-            CHEFSERVERURL='%chef_server_url%'
-            if [ -n $CHEFSERVERURL ]; then
-              echo "chef_server_url parameter: not passed" >> $LOGFILE
-              CHEFSERVERURL="https://api.opscode.com/organizations/%organization%"
-            else
-              echo "chef_server_url parameter: $CHEFSERVERURL" >> $LOGFILE
-              CHEFSERVERURL="%chef_server_url%"
-            fi
-
-            # Store the validation key in /etc/chef/validator.pem
-            echo "Storing validation key in /etc/chef/validator.pem"
-            mkdir /etc/chef /var/log/chef &>/dev/null
-            cat >/etc/chef/validator.pem <<EOF
-            %validation_key%
-            EOF
-
-            # Cook a minimal client.rb for getting the chef-client registered
-            echo "Creating a minimal /etc/chef/client.rb" >> $LOGFILE
-            touch /etc/chef/client.rb
-            cat >/etc/chef/client.rb <<EOF
-              log_level        :info
-              log_location     STDOUT
-              chef_server_url  "$CHEFSERVERURL"
-              validation_key         "/etc/chef/validator.pem"
-              validation_client_name "%organization%-validator"
-            EOF
-
-            # Cook the first boot file
-            echo "Creating a minimal /etc/chef/first-boot.json" >> $LOGFILE
-            touch /etc/chef/first-boot.json
-            cat >/etc/chef/first-boot.json <<EOF
-            {"run_list":[%role%]}
-            EOF
-
-            # Install chef-client through omnibus (if not already available)
-            if [ ! -f /usr/bin/chef-client ]; then
-              echo "Installing chef using omnibus installer" >> $LOGFILE
-              # adjust to install the latest vs. a particular version
-              curl -L https://www.opscode.com/chef/install.sh | sudo bash -s -- -v %chef_version% &>$LOGFILE
-              echo "Installation of chef complete" >> $LOGFILE
-            fi
-
-            # Kick off the first chef run
-            echo "Executing the first chef-client run"
-            if [ -f /usr/bin/chef-client ]; then
-              echo "First Chef client run" >> $LOGFILE
-              /usr/bin/chef-client
-            fi
-
-            # Script complete. Log final timestamp
-            date >> $LOGFILE
-
-          params:
-            "%chef_server_url%": { get_param: chef_server_url}
-            "%chef_version%": { get_param: chef_version}
-            "%organization%": { get_param: organization}
-            "%role%": { get_param: role}
-            "%validation_key%": { get_param: validation_key }
+  t2_server_ip:
+    description: Tier 2 Server IP
+    value: { get_attr: [tier2_setup, public_ip] }
