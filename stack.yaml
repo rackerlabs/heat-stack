@@ -72,7 +72,7 @@ parameters:
       - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
       - Ubuntu 14.04 LTS (Trusty Tahr)
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-    description: Must be a supported operating system.
+      description: Must be a supported operating system.
 
   t2_flavor:
     label: Tier 2 Flavor
@@ -105,11 +105,6 @@ parameters:
     description: Number of Tier 2 nodes to create.
     type: number
     default: 1
-    constraints:
-    - length:
-        min: 1
-        max: 25
-      description: Must be between 1 and 25 servers.
 
   t2_role:
     label: Role
@@ -162,7 +157,7 @@ resources:
       save_private_key: true
 
   tier2_setup:
-    type: "OS::HEAT::ResourceGroup"
+    type: "OS::Heat::ResourceGroup"
     properties:
       count: { get_param: t2_count }
       resource_def:

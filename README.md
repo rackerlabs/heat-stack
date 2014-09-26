@@ -9,7 +9,7 @@ joins a Chef Server.
 Requirements
 ============
 * A Heat provider that supports the following:
-  * OS::HEAT::ResourceGroup
+  * OS::Heat::ResourceGroup
   * OS::Nova::KeyPair
   * Rackspace::Cloud::LoadBalancer
 * An OpenStack username, password, and tenant id.
@@ -28,7 +28,9 @@ Parameters
 Parameters can be replaced with your own values when standing up a stack. Use
 the `-P` flag to specify a custom parameter.
 
-* `t2_image`: Must be a supported operating system. (Default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM))
+* `t2_image`: Optional: Server image used for the server created
+as a part of this deployment.
+ (Default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM))
 * `chef_version`: Optional: Version of Chef Client to use
  (Default: 11.16.0)
 * `t2_flavor`: Optional: Rackspace Cloud Server flavor to use. The size is based on the
