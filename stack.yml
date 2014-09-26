@@ -157,7 +157,7 @@ resources:
       save_private_key: true
 
   tier2_setup:
-    type: "OS::HEAT::ResourceGroup"
+    type: "OS::Heat::ResourceGroup"
     properties:
       count: { get_param: t2_count }
       resource_def:
