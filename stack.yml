@@ -105,11 +105,6 @@ parameters:
     description: Number of Tier 2 nodes to create.
     type: number
     default: 1
-    constraints:
-    - length:
-        min: 1
-        max: 25
-      description: Must be between 1 and 25 servers.
 
   t2_role:
     label: Role
