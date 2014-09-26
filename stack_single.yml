@@ -54,7 +54,7 @@ parameters:
       - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
       - Ubuntu 14.04 LTS (Trusty Tahr)
       - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
-     description: Must be a supported operating system.
+      description: Must be a supported operating system.
 
   flavor:
     label: Server Flavor
