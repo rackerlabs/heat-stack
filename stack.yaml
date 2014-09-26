@@ -163,7 +163,11 @@ resources:
       resource_def:
         type: { get_param: child_template }
         properties:
-          name: { get_param: t2_name }
+          name: 
+            str_replace:
+              template: '%name%-0%index%'
+              params:
+                '%name%': { get_param: t2_name }
           image: { get_param: t2_image }
           flavor: { get_param: t2_flavor }
           role: { get_param: t2_role }

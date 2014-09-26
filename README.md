@@ -48,7 +48,7 @@ infer the Managed Chef URL from the organization
 * `organization`: Required: Chef organization
  (Default: None)
 * `t2_count`: Number of Tier 2 nodes to create. (Default: 1)
-* `child_template`: (Default: https://raw.github.com/AutomationSupport/heat-stack/master/stack_single.yml)
+* `child_template`: (Default: http://change.this.com/stack.yaml)
 * `t2_role`: Optional: Chef Role. Will default to "_default"
  (Default: _default)
 * `t1_load_balancer`: Load Balancer that points to nodes in Tier 2. (Default: Tier1LB)
