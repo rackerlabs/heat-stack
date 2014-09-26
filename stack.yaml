@@ -147,7 +147,7 @@ parameters:
 
   child_template:
     type: string
-    default: http://change.this.com/stack.yaml
+    default: https://raw.githubusercontent.com/rackops/heat-stack/master/stack_single.yaml
 
 resources:
   ssh_key:
