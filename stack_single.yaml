@@ -159,7 +159,7 @@ resources:
             echo "Creating a minimal /etc/chef/first-boot.json" >> $LOGFILE
             touch /etc/chef/first-boot.json
             cat >/etc/chef/first-boot.json <<EOF
-            {"run_list":[%role%]}
+            {"run_list":["role[%role%]"]}
             EOF
             # Install chef-client through omnibus (if not already available)
             if [ ! -f /usr/bin/chef-client ]; then
@@ -172,7 +172,7 @@ resources:
             echo "Executing the first chef-client run"
             if [ -f /usr/bin/chef-client ]; then
               echo "First Chef client run" >> $LOGFILE
-              /usr/bin/chef-client
+              /usr/bin/chef-client -j /etc/chef/first-boot.json
             fi
             # Script complete. Log final timestamp
             date >> $LOGFILE
