@@ -5,6 +5,10 @@ Sample Heat template that creates stack tiers, injects a simple
 BASH script through cloud-init that installs Chef-client and
 joins a Chef Server.
 
+This allows you to build complex chef buildout via this HEAT template. Each tier
+(except for 1) should be considered as a role within Chef. This basic template
+allows for up to 8 tier for servers (tier 1 is a load balancer template) to allow for
+various configuration that can be completed within this framework.
 
 Requirements
 ============
@@ -44,7 +48,7 @@ Chef server, the initial chef-client run will fail.
 * `chef_server_url`: Optional: Chef Server URL. Defaults to None, but the BASH script will
 infer the Managed Chef URL from the organization
  (Default: '')
-* `t2_name`: Base name for Teir 1 (Default: tier2)
+* `t2_name`: Base name for Tier 2 (Default: tier2)
 * `organization`: Required: Chef organization
  (Default: None)
 * `t2_count`: Number of Tier 2 nodes to create. (Default: 1)
@@ -58,9 +62,9 @@ Outputs
 Once a stack comes online, use `heat output-list` to see all available outputs.
 Use `heat output-show <OUTPUT NAME>` to get the value of a specific output.
 
-* `private_key`: SSH Private Key 
-* `t2_server_ip`: Tier 2 Server IP 
-* `t1_loadbalancer`: Tier 1 Load Balancer IP 
+* `private_key`: SSH Private Key
+* `t2_server_ip`: Tier 2 Server IP
+* `t1_loadbalancer`: Tier 1 Load Balancer IP
 
 For multi-line values, the response will come in an escaped form. To get rid of
 the escapes, use `echo -e '<STRING>' > file.txt`. For vim users, a substitution
