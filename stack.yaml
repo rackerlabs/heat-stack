@@ -163,10 +163,11 @@ resources:
       resource_def:
         type: { get_param: child_template }
         properties:
-          name: 
+          name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%stack_name%-%name%-0%index%'
               params:
+                '%stack_name%': { get_param: 'OS::stack_name' }
                 '%name%': { get_param: t2_name }
           image: { get_param: t2_image }
           flavor: { get_param: t2_flavor }
@@ -182,7 +183,12 @@ resources:
     depends_on:
     - tier2_setup
     properties:
-      name: { get_param: t1_load_balancer }
+      name:
+        str_replace:
+          template: '%stack_name%-%name%'
+          params:
+            '%name%': { get_param: t1_load_balancer }
+            '%stack_name%': { get_param: 'OS::stack_name' }
       nodes:
       - addresses: { get_attr: [tier2_setup, private_ip] }
         port: 80
