@@ -4,7 +4,6 @@ machine:
 dependencies:
   override:
   - pip install hot
-  - pip install -r test-requirements.txt
 test:
   override:
   - hot test
