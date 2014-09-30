@@ -9,4 +9,3 @@ def check():
     assert file.exists("/etc/chef/client.rb"), "/etc/chef/client.rb is missing."
     assert file.exists("/etc/chef/first-boot.json"), "/etc/chef/first-boot.json is missing."
     assert file.exists("/usr/bin/chef-client"), "/usr/bin/chef-client is missing."
-    assert process.is_up("chef-client"), "chef-client is not running."
