@@ -739,8 +739,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t9_name }
           image: { get_param: t9_image }
           flavor: { get_param: t9_flavor }
@@ -760,8 +761,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t8_name }
           image: { get_param: t8_image }
           flavor: { get_param: t8_flavor }
@@ -781,8 +783,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t7_name }
           image: { get_param: t7_image }
           flavor: { get_param: t7_flavor }
@@ -802,8 +805,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t6_name }
           image: { get_param: t6_image }
           flavor: { get_param: t6_flavor }
@@ -823,8 +827,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t5_name }
           image: { get_param: t5_image }
           flavor: { get_param: t5_flavor }
@@ -844,8 +849,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t4_name }
           image: { get_param: t4_image }
           flavor: { get_param: t4_flavor }
@@ -866,8 +872,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t3_name }
           image: { get_param: t3_image }
           flavor: { get_param: t3_flavor }
@@ -888,8 +895,9 @@ resources:
         properties:
           name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t2_name }
           image: { get_param: t2_image }
           flavor: { get_param: t2_flavor }
@@ -905,7 +913,12 @@ resources:
     depends_on:
     - tier2_setup
     properties:
-      name: { get_param: t1_load_balancer }
+      name:
+        str_replace:
+          template: '%deploy_name%-%name%'
+          params:
+            '%name%': { get_param: t1_load_balancer }
+            '%deploy_name%': { get_param: 'OS::stack_name' }
       nodes:
       - addresses: { get_attr: [tier2_setup, private_ip] }
         port: 80
@@ -934,6 +947,66 @@ outputs:
     description: Tier 1 Load Balancer IP
     value: { get_attr: [tier1_load_balancer, PublicIp] }
 
-  t2_server_ip:
-    description: Tier 2 Server IP
+  t2_public_ip:
+    description: Tier 2 Public IP
     value: { get_attr: [tier2_setup, public_ip] }
+
+  t2_private_ip:
+    description: Tier 2 Private IP
+    value: { get_attr: [tier2_setup, private_ip] }
+
+  t3_public_ip:
+    description: Tier 3 Public IP
+    value: { get_attr: [tier3_setup, public_ip] }
+
+  t3_private_ip:
+    description: Tier 3 Private IP
+    value: { get_attr: [tier3_setup, private_ip] }
+
+  t4_public_ip:
+    description: Tier 4 Public IP
+    value: { get_attr: [tier4_setup, public_ip] }
+
+  t4_private_ip:
+    description: Tier 4 Private IP
+    value: { get_attr: [tier4_setup, private_ip] }
+
+  t5_public_ip:
+    description: Tier 5 Public IP
+    value: { get_attr: [tier5_setup, public_ip] }
+
+  t5_private_ip:
+    description: Tier 5 Private IP
+    value: { get_attr: [tier5_setup, private_ip] }
+
+  t6_public_ip:
+    description: Tier 6 Public IP
+    value: { get_attr: [tier6_setup, public_ip] }
+
+  t6_private_ip:
+    description: Tier 6 Private IP
+    value: { get_attr: [tier6_setup, private_ip] }
+
+  t7_public_ip:
+    description: Tier 7 Public IP
+    value: { get_attr: [tier7_setup, public_ip] }
+
+  t7_private_ip:
+    description: Tier 7 Private IP
+    value: { get_attr: [tier7_setup, private_ip] }
+
+  t8_public_ip:
+    description: Tier 8 Public IP
+    value: { get_attr: [tier8_setup, public_ip] }
+
+  t8_private_ip:
+    description: Tier 8 Private IP
+    value: { get_attr: [tier8_setup, private_ip] }
+
+  t9_public_ip:
+    description: Tier 9 Public IP
+    value: { get_attr: [tier9_setup, public_ip] }
+
+  t9_private_ip:
+    description: Tier 9 Private IP
+    value: { get_attr: [tier9_setup, private_ip] }
