@@ -3,6 +3,7 @@ test-cases:
   create:
     parameters:
       organization: 123456-testuser
+      validation_key: NOTVALID16497afc-48d2-11e4-8f5a-9f2f9fbcfee1NOTVALID
     timeout: 15 # Deployment should complete in under 15 minutes
   resource_tests:
     ssh_private_key: { get_output: private_key }
