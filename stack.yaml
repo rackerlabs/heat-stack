@@ -707,7 +707,7 @@ parameters:
     description: |
       Required: Chef organization
     type: string
-    default:
+    default: ''
 
   validation_key:
     label: Validation Key
