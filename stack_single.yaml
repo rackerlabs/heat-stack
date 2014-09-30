@@ -15,7 +15,7 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9.-_])*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
         Must begin with a letter or number and be alphanumeric or '-' and '.'
 
