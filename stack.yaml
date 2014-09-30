@@ -18,6 +18,62 @@ parameter_groups:
   - t2_count
   - t2_role
 
+- label: Tier 3
+  parameters:
+  - t3_name
+  - t3_image
+  - t3_flavor
+  - t3_count
+  - t3_role
+
+- label: Tier 4
+  parameters:
+  - t4_name
+  - t4_image
+  - t4_flavor
+  - t4_count
+  - t4_role
+
+- label: Tier 5
+  parameters:
+  - t5_name
+  - t5_image
+  - t5_flavor
+  - t5_count
+  - t5_role
+
+- label: Tier 6
+  parameters:
+  - t6_name
+  - t6_image
+  - t6_flavor
+  - t6_count
+  - t6_role
+
+- label: Tier 7
+  parameters:
+  - t7_name
+  - t7_image
+  - t7_flavor
+  - t7_count
+  - t7_role
+
+- label: Tier 8
+  parameters:
+  - t8_name
+  - t8_image
+  - t8_flavor
+  - t8_count
+  - t8_role
+
+- label: Tier 9
+  parameters:
+  - t9_name
+  - t9_image
+  - t9_flavor
+  - t9_count
+  - t9_role
+
 - label: Chef Parameters
   parameters:
   - chef_server_url
@@ -41,7 +97,7 @@ parameters:
 
   t2_name:
     label: Tier 2 Name
-    description: Base name for Teir 1
+    description: Base name for Tier 2
     type: string
     default: tier2
     constraints:
@@ -101,13 +157,531 @@ parameters:
         selected to deploy into.
 
   t2_count:
-    label: Tier 2 Nodes
+    label: Tier 2 Node Count
     description: Number of Tier 2 nodes to create.
     type: number
     default: 1
 
   t2_role:
-    label: Role
+    label: Tier 2 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t3_name:
+    label: Tier 3 Name
+    description: Base name for Tier 3
+    type: string
+    default: tier3
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t3_image:
+    label: Tier 3 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t3_flavor:
+    label: Tier 3 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t3_count:
+    label: Tier 3 Nodes
+    description: Number of Tier 3 nodes to create.
+    type: number
+    default: 1
+
+  t3_role:
+    label: Tier 3 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t4_name:
+    label: Tier 4 Name
+    description: Base name for Tier 4
+    type: string
+    default: tier4
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t4_image:
+    label: Tier 4 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t4_flavor:
+    label: Tier 4 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t4_count:
+    label: Tier 4 Nodes
+    description: Number of Tier 4 nodes to create.
+    type: number
+    default: 1
+
+  t4_role:
+    label: Tier 4 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t5_name:
+    label: Tier 5 Name
+    description: Base name for Tier 5
+    type: string
+    default: tier5
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t5_image:
+    label: Tier 5 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t5_flavor:
+    label: Tier 5 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t5_count:
+    label: Tier 5 Node Count
+    description: Number of Tier 5 nodes to create.
+    type: number
+    default: 1
+
+  t5_role:
+    label: Tier 5 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t6_name:
+    label: Tier 6 Name
+    description: Base name for Tier 6
+    type: string
+    default: tier6
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t6_image:
+    label: Tier 6 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t6_flavor:
+    label: Tier 6 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t6_count:
+    label: Tier 6 Node Count
+    description: Number of Tier 6 nodes to create.
+    type: number
+    default: 1
+
+  t6_role:
+    label: Tier 6 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t7_name:
+    label: Tier 7 Name
+    description: Base name for Tier 7
+    type: string
+    default: tier7
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t7_image:
+    label: Tier 7 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t7_flavor:
+    label: Tier 7 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t7_count:
+    label: Tier 7 Node Count
+    description: Number of Tier 7 nodes to create.
+    type: number
+    default: 1
+
+  t7_role:
+    label: Tier 7 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t8_name:
+    label: Tier 8 Name
+    description: Base name for Tier 8
+    type: string
+    default: tier8
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t8_image:
+    label: Tier 8 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t8_flavor:
+    label: Tier 8 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t8_count:
+    label: Tier 8 Node Count
+    description: Number of Tier 8 nodes to create.
+    type: number
+    default: 1
+
+  t8_role:
+    label: Tier 8 Role
+    description: |
+      Optional: Chef Role. Will default to "_default"
+    type: string
+    default: _default
+
+  t9_name:
+    label: Tier 9 Name
+    description: Base name for Tier 9
+    type: string
+    default: tier9
+    constraints:
+    - length:
+        min: 1
+        max: 64
+    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+      description: |
+        Must begin with a letter and contain only alphanumeric characters.
+
+  t9_image:
+    label: Tier 9 Image
+    description: |
+      Optional: Server image used for the server created
+      as a part of this deployment.
+    type: string
+    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+    constraints:
+    - allowed_values:
+      - CentOS 6.5
+      - CentOS 6.5 (PVHVM)
+      - CentOS 7 (PVHVM)
+      - Debian 6.06 (Squeeze)
+      - Debian 7 (Wheezy) (PVHVM)
+      - Red Hat Enterprise Linux 6.5
+      - Red Hat Enterprise Linux 6.5 (PVHVM)
+      - Ubuntu 12.04 LTS (Precise Pangolin)
+      - Ubuntu 12.04 LTS (Precise Pangolin) (PVHVM)
+      - Ubuntu 14.04 LTS (Trusty Tahr)
+      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM)
+      description: Must be a supported operating system.
+
+  t9_flavor:
+    label: Tier 9 Flavor
+    description: |
+      Optional: Rackspace Cloud Server flavor to use. The size is based on the
+      amount of RAM for the provisioned server.
+    type: string
+    default: 1 GB Performance
+    constraints:
+    - allowed_values:
+      - 1 GB Performance
+      - 2 GB Performance
+      - 4 GB Performance
+      - 8 GB Performance
+      - 15 GB Performance
+      - 30 GB Performance
+      - 512MB Standard Instance
+      - 1GB Standard Instance
+      - 2GB Standard Instance
+      - 4GB Standard Instance
+      - 8GB Standard Instance
+      - 15GB Standard Instance
+      - 30GB Standard Instance
+      description: |
+        Must be a valid Rackspace Cloud Server flavor for the region you have
+        selected to deploy into.
+
+  t9_count:
+    label: Tier 9 Node Count
+    description: Number of Tier 9 nodes to create.
+    type: number
+    default: 1
+
+  t9_role:
+    label: Tier 9 Role
     description: |
       Optional: Chef Role. Will default to "_default"
     type: string
@@ -156,6 +730,162 @@ resources:
       name: { get_param: "OS::stack_id" }
       save_private_key: true
 
+  tier9_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t9_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t9_name }
+          image: { get_param: t9_image }
+          flavor: { get_param: t9_flavor }
+          role: { get_param: t9_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier8_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t8_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t8_name }
+          image: { get_param: t8_image }
+          flavor: { get_param: t8_flavor }
+          role: { get_param: t8_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier7_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t7_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t7_name }
+          image: { get_param: t7_image }
+          flavor: { get_param: t7_flavor }
+          role: { get_param: t7_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier6_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t6_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t6_name }
+          image: { get_param: t6_image }
+          flavor: { get_param: t6_flavor }
+          role: { get_param: t6_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier5_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t5_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t5_name }
+          image: { get_param: t5_image }
+          flavor: { get_param: t5_flavor }
+          role: { get_param: t5_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+  tier4_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t4_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t4_name }
+          image: { get_param: t4_image }
+          flavor: { get_param: t4_flavor }
+          role: { get_param: t4_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+
+  tier3_setup:
+    type: "OS::Heat::ResourceGroup"
+    properties:
+      count: { get_param: t3_count }
+      resource_def:
+        type: { get_param: child_template }
+        properties:
+          name:
+            str_replace:
+              template: '%deploy_name%-%name%-0%index%'
+              params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
+                '%name%': { get_param: t3_name }
+          image: { get_param: t3_image }
+          flavor: { get_param: t3_flavor }
+          role: { get_param: t3_role }
+          chef_server_url: { get_param: chef_server_url }
+          chef_version: { get_param: chef_version }
+          organization: { get_param: organization }
+          validation_key: { get_param: validation_key }
+          ssh_keyname: { get_resource: ssh_key }
+
+
   tier2_setup:
     type: "OS::Heat::ResourceGroup"
     properties:
@@ -163,10 +893,11 @@ resources:
       resource_def:
         type: { get_param: child_template }
         properties:
-          name: 
+          name:
             str_replace:
-              template: '%name%-0%index%'
+              template: '%deploy_name%-%name%-0%index%'
               params:
+                '%deploy_name%': {get_param: 'OS::stack_name' }
                 '%name%': { get_param: t2_name }
           image: { get_param: t2_image }
           flavor: { get_param: t2_flavor }
@@ -182,7 +913,12 @@ resources:
     depends_on:
     - tier2_setup
     properties:
-      name: { get_param: t1_load_balancer }
+      name:
+        str_replace:
+          template: '%deploy_name%-%name%'
+          params:
+            '%name%': { get_param: t1_load_balancer }
+            '%deploy_name%': { get_param: 'OS::stack_name' }
       nodes:
       - addresses: { get_attr: [tier2_setup, private_ip] }
         port: 80
@@ -211,6 +947,66 @@ outputs:
     description: Tier 1 Load Balancer IP
     value: { get_attr: [tier1_load_balancer, PublicIp] }
 
-  t2_server_ip:
-    description: Tier 2 Server IP
+  t2_public_ip:
+    description: Tier 2 Public IP
     value: { get_attr: [tier2_setup, public_ip] }
+
+  t2_private_ip:
+    description: Tier 2 Private IP
+    value: { get_attr: [tier2_setup, private_ip] }
+
+  t3_public_ip:
+    description: Tier 3 Public IP
+    value: { get_attr: [tier3_setup, public_ip] }
+
+  t3_private_ip:
+    description: Tier 3 Private IP
+    value: { get_attr: [tier3_setup, private_ip] }
+
+  t4_public_ip:
+    description: Tier 4 Public IP
+    value: { get_attr: [tier4_setup, public_ip] }
+
+  t4_private_ip:
+    description: Tier 4 Private IP
+    value: { get_attr: [tier4_setup, private_ip] }
+
+  t5_public_ip:
+    description: Tier 5 Public IP
+    value: { get_attr: [tier5_setup, public_ip] }
+
+  t5_private_ip:
+    description: Tier 5 Private IP
+    value: { get_attr: [tier5_setup, private_ip] }
+
+  t6_public_ip:
+    description: Tier 6 Public IP
+    value: { get_attr: [tier6_setup, public_ip] }
+
+  t6_private_ip:
+    description: Tier 6 Private IP
+    value: { get_attr: [tier6_setup, private_ip] }
+
+  t7_public_ip:
+    description: Tier 7 Public IP
+    value: { get_attr: [tier7_setup, public_ip] }
+
+  t7_private_ip:
+    description: Tier 7 Private IP
+    value: { get_attr: [tier7_setup, private_ip] }
+
+  t8_public_ip:
+    description: Tier 8 Public IP
+    value: { get_attr: [tier8_setup, public_ip] }
+
+  t8_private_ip:
+    description: Tier 8 Private IP
+    value: { get_attr: [tier8_setup, private_ip] }
+
+  t9_public_ip:
+    description: Tier 9 Public IP
+    value: { get_attr: [tier9_setup, public_ip] }
+
+  t9_private_ip:
+    description: Tier 9 Private IP
+    value: { get_attr: [tier9_setup, private_ip] }
