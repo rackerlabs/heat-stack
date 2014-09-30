@@ -721,7 +721,7 @@ parameters:
 
   child_template:
     type: string
-    default: https://raw.githubusercontent.com/rackops/heat-stack/master/stack_single.yaml
+    default: ./stack_single.yaml
 
 resources:
   ssh_key:
