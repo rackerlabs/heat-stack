@@ -86,14 +86,14 @@ parameters:
     label: Tier 1 Load Balancer
     description: Load Balancer that points to nodes in Tier 2.
     type: string
-    default: Tier1LB
+    default: tier1LB
     constraints:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t2_name:
     label: Tier 2 Name
@@ -104,9 +104,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t2_image:
     label: Tier 2 Image
@@ -178,9 +178,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t3_image:
     label: Tier 3 Image
@@ -252,9 +252,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t4_image:
     label: Tier 4 Image
@@ -326,9 +326,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t5_image:
     label: Tier 5 Image
@@ -400,9 +400,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t6_image:
     label: Tier 6 Image
@@ -474,9 +474,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t7_image:
     label: Tier 7 Image
@@ -548,9 +548,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t8_image:
     label: Tier 8 Image
@@ -622,9 +622,9 @@ parameters:
     - length:
         min: 1
         max: 64
-    - allowed_pattern: "^[a-zA-Z][a-zA-Z0-9-]*$"
+    - allowed_pattern: "^[a-zA-Z0-9]([a-zA-Z0-9._-])*$"
       description: |
-        Must begin with a letter and contain only alphanumeric characters.
+        Must begin with a letter or number and be alphanumeric or '-' and '.'
 
   t9_image:
     label: Tier 9 Image
@@ -707,7 +707,7 @@ parameters:
     description: |
       Required: Chef organization
     type: string
-    default:
+    default: ''
 
   validation_key:
     label: Validation Key
