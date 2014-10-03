@@ -79,6 +79,7 @@ parameter_groups:
   - chef_server_url
   - chef_version
   - organization
+  - chef_env
   - validation_key
 
 parameters:
@@ -709,13 +710,20 @@ parameters:
     type: string
     default: ''
 
+  chef_env:
+    label: Chef Environment
+    description: |
+      Required: Chef Environment
+    type: string
+    default: ''
+
   validation_key:
     label: Validation Key
     description: |
       Required: chef-client will attempt to use the private key assigned to the
       chef-validator, located in /etc/chef/validation.pem. If, for any reason,
       the chef-validator is unable to make an authenticated request to the
-      Chef server, the initial chef-client run will fail.
+      Chef server, the initial chef-client run will fail. Must be base64 encoded.
     type: string
     default:
 
@@ -749,6 +757,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -771,6 +780,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -793,6 +803,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -815,6 +826,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -837,6 +849,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -859,6 +872,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -882,6 +896,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 
@@ -905,6 +920,7 @@ resources:
           chef_server_url: { get_param: chef_server_url }
           chef_version: { get_param: chef_version }
           organization: { get_param: organization }
+          chef_env: { get_param: chef_env }
           validation_key: { get_param: validation_key }
           ssh_keyname: { get_resource: ssh_key }
 

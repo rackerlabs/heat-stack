@@ -96,6 +96,13 @@ parameters:
     type: string
     default:
 
+  chef_env:
+    label: Chef Environment
+    description: |
+      Required: Chef Environment
+    type: string
+    default: ''
+
   validation_key:
     label: Validation Key
     description: |
@@ -142,9 +149,7 @@ resources:
             # Store the validation key in /etc/chef/validator.pem
             echo "Storing validation key in /etc/chef/validator.pem"
             mkdir /etc/chef /var/log/chef &>/dev/null
-            cat >/etc/chef/validator.pem <<EOF
-            %validation_key%
-            EOF
+            echo %validation_key% | base64 --decode > /etc/chef/validator.pem
             # Cook a minimal client.rb for getting the chef-client registered
             echo "Creating a minimal /etc/chef/client.rb" >> $LOGFILE
             touch /etc/chef/client.rb
@@ -180,6 +185,7 @@ resources:
             "%chef_server_url%": { get_param: chef_server_url }
             "%chef_version%": { get_param: chef_version }
             "%organization%": { get_param: organization }
+            "%chef_ver%": { get_param: chef_ver }
             "%role%": { get_param: role }
             "%validation_key%": { get_param: validation_key }
 
