@@ -149,9 +149,7 @@ resources:
             # Store the validation key in /etc/chef/validator.pem
             echo "Storing validation key in /etc/chef/validator.pem"
             mkdir /etc/chef /var/log/chef &>/dev/null
-            cat >/etc/chef/validator.pem <<EOF
-            %validation_key%
-            EOF
+            echo %validation_key% | base64 --decode > /etc/chef/validator.pem
             # Cook a minimal client.rb for getting the chef-client registered
             echo "Creating a minimal /etc/chef/client.rb" >> $LOGFILE
             touch /etc/chef/client.rb
