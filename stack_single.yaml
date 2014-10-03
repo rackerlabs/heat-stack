@@ -101,7 +101,7 @@ parameters:
     description: |
       Required: Chef Environment
     type: string
-    default: ''
+    default: _default
 
   validation_key:
     label: Validation Key
@@ -159,6 +159,7 @@ resources:
               chef_server_url  "$CHEFSERVERURL"
               validation_key         "/etc/chef/validator.pem"
               validation_client_name "%organization%-validator"
+              environment      "%chef_env%"
             EOF
             # Cook the first boot file
             echo "Creating a minimal /etc/chef/first-boot.json" >> $LOGFILE
