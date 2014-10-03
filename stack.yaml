@@ -723,7 +723,7 @@ parameters:
       Required: chef-client will attempt to use the private key assigned to the
       chef-validator, located in /etc/chef/validation.pem. If, for any reason,
       the chef-validator is unable to make an authenticated request to the
-      Chef server, the initial chef-client run will fail.
+      Chef server, the initial chef-client run will fail. Must be base64 encoded.
     type: string
     default:
 
