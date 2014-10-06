@@ -1,3 +1,5 @@
+[![Circle CI](https://circleci.com/gh/rackops/heat-stack.png?style=badge)](https://circleci.com/gh/rackops/heat-stack)
+
 Description
 ===========
 
