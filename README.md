@@ -47,6 +47,8 @@ amount of RAM for the provisioned server.
 * `t5_count`: Number of Tier 5 nodes to create. (Default: 1)
 * `t8_count`: Number of Tier 8 nodes to create. (Default: 1)
 * `t3_count`: Number of Tier 3 nodes to create. (Default: 1)
+* `chef_env`: Required: Chef Environment
+ (Default: _default)
 * `t7_flavor`: Optional: Rackspace Cloud Server flavor to use. The size is based on the
 amount of RAM for the provisioned server.
  (Default: 1 GB Performance)
@@ -105,7 +107,7 @@ as a part of this deployment.
 * `validation_key`: Required: chef-client will attempt to use the private key assigned to the
 chef-validator, located in /etc/chef/validation.pem. If, for any reason,
 the chef-validator is unable to make an authenticated request to the
-Chef server, the initial chef-client run will fail.
+Chef server, the initial chef-client run will fail. Must be base64 encoded.
  (Default: None)
 * `t3_image`: Optional: Server image used for the server created
 as a part of this deployment.
@@ -115,7 +117,7 @@ amount of RAM for the provisioned server.
  (Default: 1 GB Performance)
 * `t9_count`: Number of Tier 9 nodes to create. (Default: 1)
 * `organization`: Required: Chef organization
- (Default: None)
+ (Default: '')
 * `t4_flavor`: Optional: Rackspace Cloud Server flavor to use. The size is based on the
 amount of RAM for the provisioned server.
  (Default: 1 GB Performance)
@@ -123,7 +125,7 @@ amount of RAM for the provisioned server.
 as a part of this deployment.
  (Default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM))
 * `child_template`: (Default: https://raw.githubusercontent.com/rackops/heat-stack/master/stack_single.yaml)
-* `t1_load_balancer`: Load Balancer that points to nodes in Tier 2. (Default: Tier1LB)
+* `t1_load_balancer`: Load Balancer that points to nodes in Tier 2. (Default: tier1LB)
 
 Outputs
 =======
